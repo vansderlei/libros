@@ -1,0 +1,6 @@
+.book-card{
+    padding: 0 2px;
+}
+.book-card .book-card-img{
+    max-width: 150px;
+}

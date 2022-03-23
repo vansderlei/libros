@@ -1,0 +1,13 @@
+.container {
+  	text-align: center;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.container .books-cards{
+	display: flex;
+    flex-wrap: wrap;
+    margin: 32px;
+}

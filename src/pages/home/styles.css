@@ -10,5 +10,6 @@
     display: flex;
     flex-wrap: wrap;
     margin: 32px auto;
+    justify-content: center;
 }
 

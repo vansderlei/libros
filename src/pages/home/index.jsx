@@ -1,19 +1,28 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import './styles.css';
 import Logo from "../../components/logo"
+import Loader from "../../components/loaders/loader"
 import Subtitle from "../../components/subtitle"
 import SearchInput from '../../components/searchInput';
 import BooksCard from "../../components/bookCard"
 import getBooks from "../../utils/books"
+import { useHistory } from "react-router-dom";
 
 function Home() {
 	const [searchValue, setSearchValue] = useState('')
 	const [booksList, setBooksList] = useState([])
+	const { push: routerPush } = useHistory();
+
 
 	const handleChange = (e) => {
 		const { value } = e.target;
 		setSearchValue(value);
 	};
+
+	const openBookPage = (book) =>{
+		localStorage.setItem("selectedBook", JSON.stringify(book))
+		routerPush("/book/" + book.ISBN);
+	}
 
 	const filteredBooksList = searchValue
 		? booksList.filter((book) => {
@@ -22,6 +31,7 @@ function Home() {
 
 	const handleBooksList = useCallback(async () => setBooksList(await getBooks()),[])
 	useEffect(() => {
+		localStorage.removeItem("selectedBook")
 		handleBooksList()
 	}, [handleBooksList])
 
@@ -31,13 +41,15 @@ function Home() {
 			<Subtitle>A maior biblioteca eletrônica do mundo</Subtitle>
 			<SearchInput value={searchValue} handleChange={handleChange}></SearchInput>
 			<div className="books-cards">
-				{filteredBooksList.map((book) => {
+				{!!booksList && filteredBooksList.map((book) => {
 					return <BooksCard
+						onClick={() => openBookPage(book)}	
 						key={book.ISBN}
 						imgSrc={book.image}
 						title={book.title}
 					/>
 				})}
+				{!booksList.length > 0 && <Loader />}
 			</div>
 		</div>
 	);

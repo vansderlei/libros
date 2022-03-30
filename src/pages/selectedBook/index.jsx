@@ -10,7 +10,7 @@ function SelectedBook() {
     //criar gerBooks
 
     useEffect(() => {
-        document.title = `Libros - ${currentBook.title}`
+        document.title = `${currentBook.title} | ${currentBook.author} - Libros`
     }, [currentBook.title]);
     return (
         <div className="container">

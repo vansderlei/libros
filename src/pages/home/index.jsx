@@ -9,10 +9,10 @@ import getBooks from "../../utils/books"
 import { useHistory } from "react-router-dom";
 
 function Home() {
+	document.title = `Libros`
 	const [searchValue, setSearchValue] = useState('')
 	const [booksList, setBooksList] = useState([])
 	const { push: routerPush } = useHistory();
-
 
 	const handleChange = (e) => {
 		const { value } = e.target;

@@ -1,6 +1,11 @@
 .book-card{
-    padding: 0 2px;
+    padding: 2px;
+    display: flex;
+}
+.book-card:hover{
+    cursor: pointer;
 }
 .book-card .book-card-img{
     max-width: 150px;
+    transition: .6s;
 }

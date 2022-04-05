@@ -5,6 +5,7 @@
 }
 .cover{
     width: 250px;
+    height: fit-content;
 }
 .details {
     max-width: 700px;

@@ -5,6 +5,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 992px;
+    margin: 0 auto;
 }
 .container .books-cards{
     display: flex;

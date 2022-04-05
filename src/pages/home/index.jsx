@@ -1,18 +1,28 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useContext, useRef, useState } from 'react';
 import './styles.css';
+import { loadBooks } from '../../contexts/booksProvider/actions';
+import { BooksContext } from '../../contexts/booksProvider/context';
 import Logo from "../../components/logo"
-import Loader from "../../components/loaders/loader"
 import Subtitle from "../../components/subtitle"
-import SearchInput from '../../components/searchInput';
 import BooksCard from "../../components/bookCard"
-import getBooks from "../../utils/books"
+import Loader from "../../components/loaders/loader"
+import SearchInput from '../../components/searchInput';
 import { useHistory } from "react-router-dom";
 
 function Home() {
+	const isMounted = useRef(true);
 	document.title = `Libros`
+
+	const booksContext = useContext(BooksContext)
+	const { booksState, booksDispatch } = booksContext
+	
+	useEffect(() => {
+		loadBooks(booksDispatch).then((dispatch) => { if (isMounted.current) dispatch() });
+		return () => isMounted.current = false;
+	},[booksDispatch]);
 	const [searchValue, setSearchValue] = useState('')
-	const [booksList, setBooksList] = useState([])
 	const { push: routerPush } = useHistory();
+
 
 	const handleChange = (e) => {
 		const { value } = e.target;
@@ -25,15 +35,9 @@ function Home() {
 	}
 
 	const filteredBooksList = searchValue
-		? booksList.filter((book) => {
+		? booksState.books.filter((book) => {
 			return book.title.toLowerCase().includes(searchValue.toLowerCase())
-		}) : booksList
-
-	const handleBooksList = useCallback(async () => setBooksList(await getBooks()),[])
-	useEffect(() => {
-		localStorage.removeItem("selectedBook")
-		handleBooksList()
-	}, [handleBooksList])
+		}) : booksState.books
 
 	return (
 		<div className="container">
@@ -41,15 +45,18 @@ function Home() {
 			<Subtitle>A maior biblioteca eletrônica do mundo</Subtitle>
 			<SearchInput value={searchValue} handleChange={handleChange}></SearchInput>
 			<div className="books-cards">
-				{!!booksList && filteredBooksList.map((book) => {
-					return <BooksCard
-						onClick={() => openBookPage(book)}	
-						key={book.ISBN}
-						imgSrc={book.image}
-						title={book.title}
-					/>
-				})}
-				{!booksList.length > 0 && <Loader />}
+				{!!booksState.books && filteredBooksList.map((book) => {
+						return <BooksCard
+							onClick={() => openBookPage(book)}	
+							key={book.ISBN}
+							imgSrc={book.image}
+							title={book.title}
+						/>
+					})
+				}
+				{
+					booksState.isLoading && ( <Loader /> )
+				}
 			</div>
 		</div>
 	);

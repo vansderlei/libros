@@ -1,0 +1,2 @@
+export const BOOKS_SUCCESS = 'BOOKS_SUCCESS';
+export const BOOKS_LOADING = 'BOOKS_LOADING';
